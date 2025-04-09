@@ -1,0 +1,45 @@
+name: Run Scripts
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  run-scripts:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Windows Bash scripts
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo "Running Windows Batch scripts Started"
+          for %%f in (scripts\*.bat) do (
+            echo "Running Batch Script %%f..."
+            %%f
+          )
+          echo "Running Windows Batch scripts Completed"
+
+      - name: Run Linux Shell Scripts
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo "Running Linux Shell scripts Started"
+          chmod +x ./scripts/*.sh
+          for script in ./scripts/*.sh; do
+            echo "Running Shell Script $script..."
+            ./$script
+          done
+          echo "Running Linux Shell scripts Ended"
+
+      - name: Run Python script
+        run: |
+          chmod +x ./scripts/*.py
+          for script in ./scripts/*.py; do
+            echo "Running $script..."
+            python3 $script
+          done
