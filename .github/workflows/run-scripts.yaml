@@ -19,10 +19,10 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           echo "Running Windows Batch scripts Started"
-          for %%f in (scripts\*.bat) do (
-            echo "Running Batch Script %%f..."
-            %%f
-          )
+          Get-ChildItem -Path scripts\*.bat | ForEach-Object {
+            Write-Output "Running $_ ..."
+            & $_.FullName
+          }
           echo "Running Windows Batch scripts Completed"
 
       - name: Run Linux Shell Scripts
@@ -38,8 +38,10 @@ jobs:
 
       - name: Run Python script
         run: |
+          echo "Running Linux Python scripts Started"
           chmod +x ./scripts/*.py
           for script in ./scripts/*.py; do
             echo "Running $script..."
             python3 $script
           done
+          echo "Running Linux Python scripts Started"

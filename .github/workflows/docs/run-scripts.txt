@@ -1,0 +1,52 @@
+So first i got this error
+arserError: D:\a\_temp\ba8ef931-1d9f-4199-b7b4-f7d7fb07e507.ps1:3
+Line |
+   3 |  for %%f in (scripts\*.bat) do (
+     |     ~
+     | Missing opening '(' after keyword 'for'.
+
+
+this error comes from a PowerShell context interpreting batch script syntax, which doesn’t work directly in a run: block on Windows runners, 
+because GitHub Actions uses PowerShell by default on Windows.
+
+In short:
+
+Your run: step on Windows runs in PowerShell.
+
+But you're writing a batch script loop, which causes a parser error.
+
+so there is two option 
+
+1. we change syntax to of for loop according to PowerShell script (preffered)
+- name: Run Windows Batch Scripts
+  if: runner.os == 'Windows'
+  run: |
+    Get-ChildItem -Path scripts\*.bat | ForEach-Object {
+      Write-Output "Running $_ ..."
+      & $_.FullName
+    }
+
+2. forcefully tell github actions to use cmd
+- name: Run Windows Batch Scripts (CMD shell)
+  if: runner.os == 'Windows'
+  shell: cmd
+  run: |
+    for %%f in (scripts\*.bat) do (
+      echo Running %%f ...
+      call %%f
+    )
+
+
+✅ Why PowerShell is preferred over CMD in GitHub Actions (Windows)
+Default Shell – PowerShell is the default on Windows runners (no need to override shell:).
+
+Modern & Powerful – Supports objects, better error handling, and scripting features.
+
+No Syntax Errors – CMD-style loops (like for %%f) fail in PowerShell unless you switch shells.
+
+Better Integration – Cleaner logs, easier use of GitHub Actions variables and outputs.
+
+Future-Ready – PowerShell is actively maintained; CMD is legacy.
+
+👉 Use CMD only if working with legacy .bat scripts , scripts which can not be easily converted in PowerShell script
+
