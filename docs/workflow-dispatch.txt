@@ -208,7 +208,7 @@ jobs:
       - run: echo "Deploying to ${{ github.event.inputs.environment }}"
 
 
-so as you see conditio is removed !
+so as you see condition is removed !
 
 but after this I was confused that what is difference which i overlooked but after this clarification I got that
 although from above it's explanatory but I'm just dumb ! so I need to ask question and I get answer than I realise that it was already saying that 😅🤣
@@ -285,3 +285,42 @@ here's the example , I knew you will ask it!😉`
 
 let's stop here  , First let me test it,
 I will add further documentation in next commit !
+
+okay so i have tested it now lets go with this env setup and make it work
+i am creting new file for that workflow 
+
+now,
+
+✅ Goal:
+Let’s say we want to use a different API key for:
+
+staging
+production
+
+We’ll store each key securely in GitHub’s Environment secrets, and use them in our workflow based on what environment was selected.
+
+🪄 Step 1: Define Environments in GitHub
+Go to your repo → Settings → Environments
+
+Click New environment
+Create one for staging and one for production
+
+For each:
+
+Click into the environment
+Add a secret, like:
+API_KEY → "staging-key-123" (for staging)
+API_KEY → "prod-key-456" (for production)
+
+and refere manual_deployment.yaml file
+
+🔐 What Happens:
+When you manually run the workflow, you’ll select an environment (staging or production)
+
+The job picks the right environment-specific secret: API_KEY
+GitHub injects the correct value from that environment
+
+
+
+
+
