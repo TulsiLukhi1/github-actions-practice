@@ -1,0 +1,22 @@
+name : Manual Trigger
+
+on : 
+  workflow_dispatch :
+    inputs :
+      description : "Choose environment"
+      required : true
+      default : "dev"
+
+jobs:
+  run-manual-trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Manual Trigger
+        run: |
+          echo "Running Manual Trigger..."
+          echo "Environment: ${{ github.event.inputs.description }}"
+          echo "Manual Trigger Completed"
