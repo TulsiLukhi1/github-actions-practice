@@ -23,7 +23,7 @@ jobs:
             Write-Output "Running $_ ..."
             & $_.FullName
           }
-          echo "Running Windows Batch scripts Completed"
+          echo "Running Windows Batch scripts Finished"
 
       - name: Run Linux Shell Scripts
         if: matrix.os == 'ubuntu-latest'
@@ -34,9 +34,10 @@ jobs:
             echo "Running Shell Script $script..."
             ./$script
           done
-          echo "Running Linux Shell scripts Ended"
+          echo "Running Linux Shell scripts Finished"
 
-      - name: Run Python script
+      - name: Run Linux Python Scripts
+        if: runner.os == 'Linux'
         run: |
           echo "Running Linux Python scripts Started"
           chmod +x ./scripts/*.py
@@ -44,4 +45,15 @@ jobs:
             echo "Running $script..."
             python3 $script
           done
-          echo "Running Linux Python scripts Started"
+          echo "Running Linux Python scripts Finished"
+
+      - name: Run Windows PowerShell Scripts
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Write-Output "Running Windows PowerShell scripts Started"
+          Get-ChildItem -Path .\scripts\*.ps1 | ForEach-Object {
+            Write-Output "Running $($_.FullName)..."
+            & $_.FullName
+          }
+          Write-Output "Running Windows PowerShell scripts Finished"

@@ -50,3 +50,32 @@ Future-Ready – PowerShell is actively maintained; CMD is legacy.
 
 👉 Use CMD only if working with legacy .bat scripts , scripts which can not be easily converted in PowerShell script
 
+
+
+so again after doing this changes , 
+I got same error for python scripts like this
+
+Run echo "Running Linux Python scripts Started"
+  echo "Running Linux Python scripts Started"
+  chmod +x ./scripts/*.py
+  for script in ./scripts/*.py; do
+    echo "Running $script..."
+    python3 $script
+  done
+  echo "Running Linux Python scripts Started"
+  shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ParserError: D:\a\_temp\c7b3dd38-815d-4483-9fd5-f6b796c22430.ps1:4
+Line |
+   4 |  for script in ./scripts/*.py; do
+     |     ~
+     | Missing opening '(' after keyword 'for'.
+
+
+now as this is shell code , it will not work because of same reason which I explained above
+but quesion is if this is the case than it should not work on ubantu also 
+but it is working properly so what is issue ?
+
+so here's the thing ubantu or linux system by default uses Bash shell by default, while Windows runners in GitHub Actions use PowerShell by default.
+
+so we have to again write code according to os as we done for .sh and .bat files 
+
