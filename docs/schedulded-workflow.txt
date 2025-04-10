@@ -1,0 +1,90 @@
+now , first time when i saw dummu example of this which was 
+
+name: Scheduled Job
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Every day at 8 AM UTC
+
+jobs:
+  run-scheduled-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Print date and message
+        run: |
+          echo "Running daily scheduled task at $(date)"
+
+
+so it is simple that after particular time we print something
+
+🕓 How cron Works
+* -->  Any value
+0 8 * * *  -->   8 AM UTC Daily	
+*/15 * * * * --> 	Every 15 mins	
+
+GitHub uses UTC time, so if you want 1 PM IST, convert it to 7:30 AM UTC.
+
+✅ To Test It:
+You can't manually trigger this (unless you add workflow_dispatch).
+So push this file and wait for the next scheduled time.
+
+
+now i want sommething real right as why we even need scheduled thing in our dev projects
+so here's real world use case
+you want to do back up daily at 8am , so what you will do , make backup by yourself , no right?
+ 
+
+so we can schedule the backup , so i have added code in file
+
+so it creates backup folder with data and attach file and add text into it
+mkdir -p backup/$(date +%Y-%m-%d)
+echo "Backup is taken on $(date)" > backup/$(date +%Y-%m-%d)/info.txt
+Backup is taken on $(date)" this will be written into info.txt file of that date
+
+so i was like how i can access that backup folder right?
+I want to see that backup is taken or not !
+
+here is answer what happen and what we can do to see that folder in our case!😉
+
+whatever we run in github actions 
+It runs inside a virtual machine (called a runner) that GitHub temporarily spins up to execute our workflow.
+🔧 So it's not your local machine, and not directly in GitHub’s UI either — it's a clean virtual environment (like a mini Linux/Windows computer) created for each run.
+
+🧹 And after the job finishes?
+That virtual machine is destroyed.
+So anything you created (like folders, files) will be gone unless you:
+
+Upload them as artifacts ✅
+Or commit them to a repo (not ideal for temp files)
+☁️ Upload to cloud (e.g., S3, GDrive, etc.)
+
+
+okay we can not ccommit to repo that is absolutely right
+becase we are taking bacckup everyday and our repo should not have that
+
+so what we can do is create artifacts...
+
+again new word!🤔
+
+so what is this artifacts???
+
+An artifact is any file or folder your workflow creates that you want to keep after the job finishes.
+
+Think of it like: 
+🧳 A suitcase where you pack up the output (logs, build files, backups, test reports, etc.) from the runner, so you can download it later.
+
+🔍 Why Use Artifacts?
+Save build outputs (like compiled code, zipped apps)
+Save test results
+Store logs or backup files
+Share files between jobs in the same workflow
+
+📦 How to See Artifacts?
+After the job runs:
+
+Go to the repo → Actions tab
+Click your workflow run
+You’ll see a "Download artifact" button with the name (like daily-backup)

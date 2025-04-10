@@ -1,0 +1,27 @@
+name : scheduled backup
+
+on:
+  workflow_dispatch: 
+  schedule:
+    - cron: '0 0 */10 * *'  
+
+
+jobs:
+  daily-backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Perform backup
+        run: |
+          mkdir -p backup/$(date +%Y-%m-%d)
+          echo "Backup is taken on $(date +%Y-%m-%d)" > backup/$(date +%Y-%m-%d)/backup.txt
+        
+      - name: Upload backup
+        uses: actions/upload-artifact@v3
+        with:
+          name: daily-backup
+          path: backup/
+
+
