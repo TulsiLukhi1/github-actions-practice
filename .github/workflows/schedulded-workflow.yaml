@@ -19,7 +19,7 @@ jobs:
           echo "Backup is taken on $(date +%Y-%m-%d)" > backup/$(date +%Y-%m-%d)/backup.txt
         
       - name: Upload backup
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: daily-backup
           path: backup/
